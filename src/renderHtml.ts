@@ -62,10 +62,21 @@ export function renderHtml(content: Record<string, any>) {
           btn.disabled = true;
           btn.textContent = 'Enviando...';
           try {
-            const res = await fetch(window.location.pathname, {
+            // include access_key from search params if present
+            const params = new URLSearchParams(window.location.search);
+            const access_key = params.get('access_key');
+            const payload = { uuid: obj.candidate };
+
+            // Build fetch URL and include access_key as a search param as well
+            const fetchUrl = new URL(window.location.href);
+            if (access_key) {
+              fetchUrl.searchParams.set('access_key', access_key);
+            }
+
+            const res = await fetch(fetchUrl.toString(), {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ uuid: obj.candidate })
+              body: JSON.stringify(payload)
             });
             const json = await res.json();
             // If candidate was already used the server returns error + new candidate; re-render with that response
