@@ -41,6 +41,38 @@ export default {
         });
       }
 
+      // If there's a secret_feed array, insert provided votekeys before any uuid handling
+      if (typeof body === "object" && body !== null && "secret_feed" in body) {
+        const feed = (body as any).secret_feed;
+        if (!Array.isArray(feed)) {
+          return new Response(JSON.stringify({ error: "bad request" }), {
+            status: 400,
+            headers: { "content-type": "application/json" },
+          });
+        }
+
+        const insertStmt = db.prepare("INSERT INTO votekeys (id, votekey) VALUES (?, ?)");
+        let insertCount = 0;
+
+        for (const vk of feed) {
+          if (typeof vk !== "string") continue;
+          const id = crypto.randomUUID();
+          try {
+            await insertStmt.bind(id, vk).run();
+            insertCount++;
+          } catch (e) {
+            // ignore individual insertion errors (e.g., constraint violations) and continue
+          }
+        }
+
+        const remain = await getRemain();
+        const candidate = await getRandomCandidate();
+
+        return new Response(JSON.stringify({ insert_count: insertCount, remain, candidate }), {
+          headers: { "content-type": "application/json" },
+        });
+      }
+
       // Narrow the unknown to the expected shape before accessing uuid
       const uuid =
         typeof body === "object" && body !== null && "uuid" in body
