@@ -1,0 +1,16 @@
+{
+  "compatibility_date": "2025-10-08",
+  "main": "src/index.ts",
+  "name": "d1vote",
+  "upload_source_maps": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_id": "3448d6df-2c2b-49d0-80cd-58b5bee75104",
+      "database_name": "votekeys25"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
