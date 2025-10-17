@@ -112,6 +112,7 @@ export default {
       const sel = db.prepare("SELECT votekey FROM votekeys WHERE id = ?");
       const { results } = await sel.bind(uuid).all();
       const votekey = results[0]?.votekey ?? null;
+      const candidate = await getRandomCandidate();
 
       return new Response(JSON.stringify({ votekey, remain, candidate: uuid }), {
         headers: { "content-type": "application/json" },
