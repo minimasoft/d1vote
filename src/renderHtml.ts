@@ -12,7 +12,7 @@ export function renderHtml(content: unknown) {
       <body>
         <main>
           <p>Votekeys</p>
-          <pre><code>${content}</code></pre>
+          <pre><code>${JSON.stringify(content)}</code></pre>
         </main>
       </body>
     </html>
