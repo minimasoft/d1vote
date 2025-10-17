@@ -10,6 +10,9 @@
       "database_name": "votekeys25"
     }
   ],
+  "vars": {
+    "ACCESS_KEY": "supersecret"
+  },
   "observability": {
     "enabled": true
   }

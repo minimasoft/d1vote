@@ -4,6 +4,14 @@ import { renderHtml } from "./renderHtml";
 export default {
   async fetch(request, env) {
     const db = env.DB;
+    const access_key = env.ACCESS_KEY;
+    
+    // Simple access key check
+    const url = new URL(request.url);
+    const reqKey = url.searchParams.get("access_key");
+    if (access_key && reqKey !== access_key) {
+      return new Response("forbidden", { status: 403 });
+    }
 
     const getRemain = async () => {
       const stmt = db.prepare("SELECT COUNT(*) AS cnt FROM votekeys WHERE used IS NULL");
